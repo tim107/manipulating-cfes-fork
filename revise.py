@@ -73,3 +73,23 @@ class REVISE:
         loss2 = torch.sum((cf_initialize - query_instance) ** 2)
         print(loss1, "\t", loss2)
         return loss1 + self._lambda * loss2
+
+
+class ReviseModel:
+    def __init__(self, model, *args, **kwargs):
+        self.model = model
+
+    def predict_tensor(self, x):
+        return self.model(x)
+
+
+class ReviseData:
+    def __init__(self, dataset, scaler):
+        self.dataset = dataset
+        self.scaler = scaler
+
+    def prepare_query(self, query_instance, normalized):
+        pass
+
+    def get_mask_of_features_to_vary(self, features_to_vary):
+        pass
