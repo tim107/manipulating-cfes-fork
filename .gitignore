@@ -201,6 +201,10 @@ celerybeat-schedule
 venv/
 ENV/
 
+#models
+
+models/
+
 # Spyder project settings
 .spyderproject
 .spyproject
