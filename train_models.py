@@ -42,9 +42,12 @@ parser.add_argument("--cfname", default='wachter', type=str, help="cf algorithm 
 parser.add_argument("--dataset", default='cc', type=str, help="dataset name")
 parser.add_argument("--key_lr", default=1e-2, type=float, help="Perturbation vector learning rate.")
 parser.add_argument("--model_lr", default=3e-4, type=float, help="Model learning rate")
+parser.add_argument("--save_model", action="store_true", help="Flag to save the trained models weights")
+parser.add_argument("--save_path", default="models/model_weights.pth")
 
 args = parser.parse_args()
-
+print("args.save_model")
+print(args.save_model)
 torch.manual_seed(10)
 np.random.seed(0)
 
@@ -432,3 +435,7 @@ if RUN_SECOND:
 								   r=True)
 
 			training_diff = training_diff['Training_Delta'] 
+
+
+if args.save_model:
+	torch.save(model.state_dict(), args.save_path)
