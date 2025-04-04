@@ -125,6 +125,9 @@ def get_and_preprocess_compas_data():
     return X.values, y, sensitive_attr
 
 def call_get_data(name):
+    """
+    Loads the data set given the name.  If sythetic, creates blobs sythetic dataset example.
+    """
     if name == "synthetic":
         data, t_labels = make_blobs(n_samples=100, n_features=2, cluster_std=2, centers=[[8,5], [3,1], [-4,1], [-8,5]])
         labels = np.zeros_like(t_labels)
@@ -150,7 +153,7 @@ def call_get_data(name):
 
 def get_data_set(name):
     """
-    Gets the data set given the name.  If sythetic, creates blobs sythetic dataset example.
+    Gets the randomly split dataset given the name.  If sythetic, creates blobs sythetic dataset example.
     """
 
     data, labels, protected, cats = call_get_data(name)
@@ -162,7 +165,7 @@ def get_data_set(name):
 
 def save_indices(name, split=0.8):
     """
-    Gets the test and training indices given the name of the dataset.  If sythetic, creates blobs sythetic dataset example.
+    Gets the test and training indices given the name of the dataset.  
     """
     data, labels, protected, cats = call_get_data(name)
 
@@ -173,7 +176,7 @@ def save_indices(name, split=0.8):
 
 def get_presplit_data(name):
     """
-    Gets the presplit test and training data given the name of the dataset.  If sythetic, creates blobs sythetic dataset example.
+    Gets the presplit test and training data given the name of the dataset. 
     """
     data, labels, protected, cats = call_get_data(name)
 
