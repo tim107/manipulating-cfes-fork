@@ -124,10 +124,7 @@ def get_and_preprocess_compas_data():
 
     return X.values, y, sensitive_attr
 
-def get_data_set(name):
-    """
-    Gets the data set given the name.  If sythetic, creates blobs sythetic dataset example.
-    """
+def call_get_data(name):
     if name == "synthetic":
         data, t_labels = make_blobs(n_samples=100, n_features=2, cluster_std=2, centers=[[8,5], [3,1], [-4,1], [-8,5]])
         labels = np.zeros_like(t_labels)
@@ -149,7 +146,40 @@ def get_data_set(name):
     else:
         raise NotImplementedError
 
+    return data, labels, protected, cats
+
+def get_data_set(name):
+    """
+    Gets the data set given the name.  If sythetic, creates blobs sythetic dataset example.
+    """
+
+    data, labels, protected, cats = call_get_data(name)
+
     training = np.random.choice(data.shape[0], size=int(data.shape[0] * 0.9)) 
     testing = np.array([i for i in range(data.shape[0]) if i not in training])
 
     return data[training], labels[training], protected[training], data[testing], labels[testing], protected[testing], cats
+
+def save_indices(name, split=0.8):
+    """
+    Gets the test and training indices given the name of the dataset.  If sythetic, creates blobs sythetic dataset example.
+    """
+    data, labels, protected, cats = call_get_data(name)
+
+    training = np.random.choice(data.shape[0], size=int(data.shape[0] * split)) 
+    testing = np.array([i for i in range(data.shape[0]) if i not in training]) 
+
+    np.savez(f"./data/training_test_indices_{name}.npz", training=training, testing=testing)
+
+def get_presplit_data(name):
+    """
+    Gets the presplit test and training data given the name of the dataset.  If sythetic, creates blobs sythetic dataset example.
+    """
+    data, labels, protected, cats = call_get_data(name)
+
+    indices = np.load(f"./data/training_test_indices_{name}.npz")
+    training, testing = indices["training"], indices["testing"]
+
+
+    return data[training], labels[training], protected[training], data[testing], labels[testing], protected[testing], cats
+
