@@ -169,7 +169,7 @@ def save_indices(name, split=0.8):
     """
     data, labels, protected, cats = call_get_data(name)
 
-    training = np.random.choice(data.shape[0], size=int(data.shape[0] * split)) 
+    training = np.random.choice(data.shape[0], size=int(data.shape[0] * split), replace=False) 
     testing = np.array([i for i in range(data.shape[0]) if i not in training]) 
 
     np.savez(f"./data/training_test_indices_{name}.npz", training=training, testing=testing)
