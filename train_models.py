@@ -44,6 +44,7 @@ parser.add_argument("--key_lr", default=1e-2, type=float, help="Perturbation vec
 parser.add_argument("--model_lr", default=3e-4, type=float, help="Model learning rate")
 parser.add_argument("--save_model", action="store_true", help="Flag to save the trained models weights")
 parser.add_argument("--save_path", default="models/model_weights.pth")
+parser.add_argument("--use_presplit", action="store_true", help="Flag to use pre-split data to train model")
 
 args = parser.parse_args()
 print("args.save_model")
@@ -113,7 +114,10 @@ class NeuralNet(nn.Module):
         	return out
 ###############################################
 # Get the data
-data, labels, protected, data_t, labels_t, protected_t, cat_features = get_data_set(dataset)
+if args.use_presplit:
+	data, labels, protected, data_t, labels_t, protected_t, cat_features = get_presplit_data(dataset)
+else:
+	data, labels, protected, data_t, labels_t, protected_t, cat_features = get_data_set(dataset)
 
 config['cat_features'] = cat_features
 numerical = np.array([val for val in range(data.shape[1]) if val not in cat_features])
