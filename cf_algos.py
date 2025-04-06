@@ -33,6 +33,21 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 num_cores = multiprocessing.cpu_count()
 
 
+def get_obj_and_df(cfname):
+    if cfname == "wachter" or cfname == "wachterbb":
+        return wachter_df, wachter_objective
+    elif cfname == "wachter-sparse":
+        return sparse_wachter_df, sparse_wachter_objective
+    elif cfname == "proto":
+        return proto, None
+    elif cfname == "dice":
+        return wachter_df, dice_obj
+    elif cfname == "revise":
+        return torch.nn.MSELoss, compute_loss_revise
+    else:
+        raise NotImplementedError
+
+
 def plot_decision_boundary(pred_func, X, y, protected, writer=None, cfs=None, cfs_perturbed=None, e=None):
     X = X.cpu().detach().numpy()
     y = y.cpu().detach().numpy()
@@ -223,7 +238,7 @@ def assess(e, model, data, protected, labels, data_t, protected_t, labels_t, cf_
                 'Perturbed_Burden_Protected': perturbed_burden_protected,
                 'Training_Delta': training_diff}
 
-
+# TODO: add revise
 def get_counterfactuals_from_alg(data, model, protected, cf_name, cf_args, all_data=None, key=None, sample=False,
                                  use_tqdm=False, perturb=False):
     """
@@ -286,7 +301,7 @@ def get_counterfactuals_from_alg(data, model, protected, cf_name, cf_args, all_d
     else:
         return {'cfs': cfs}
 
-
+# TODO: add revise
 def call_cf_alg(model, data, cf_name, cf_args, use_tqdm):
     if cf_name == "wachter":
         cfs = wachter(model,
@@ -472,19 +487,6 @@ class proto:
         return obj
 
 
-def get_obj_and_df(cfname):
-    if cfname == "wachter" or cfname == "wachterbb":
-        return wachter_df, wachter_objective
-    elif cfname == "wachter-sparse":
-        return sparse_wachter_df, sparse_wachter_objective
-    elif cfname == "proto":
-        return proto, None
-    elif cfname == "dice":
-        return wachter_df, dice_obj
-    else:
-        raise NotImplementedError
-
-
 def prototype_counterfactuals(model, data, positive_data, lmbda, target, cat_features, alglr=0.01, eps=1e-10,
                               use_tqdm=False):
     p = proto(model, positive_data)
@@ -630,13 +632,13 @@ def wachter(model, data, positive_data, lmbda, target, cat_features, mad, alglr=
     return torch.stack(cfs).squeeze()
 
 
-def revise(model, cf_instance, data, positive_data, lmbda, target, cat_features, features_to_vary, alglr=1e-1, eps=1e-10,
-           use_tqdm=False, sparse=False, opt='sgd', exit_on_greater=False):
+def revise_func(model, cf_instance, data, positive_data, lmbda, target, cat_features, features_to_vary, alglr=1e-1,
+                eps=1e-10,
+                use_tqdm=False, sparse=False, opt='sgd', exit_on_greater=False):
     # if not sparse:
     # 	counterfactual_objective = wachter_objective
     # else:
     # 	counterfactual_objective = sparse_wachter_objective
-
 
     maxes, mins = torch.max(data, dim=0)[0], torch.min(data, dim=0)[0].detach().clone().numpy()
 
@@ -648,7 +650,6 @@ def revise(model, cf_instance, data, positive_data, lmbda, target, cat_features,
     for datapoint in data:
         cfs.append(get_cf(datapoint, features_to_vary, target))
 
-
     # Run cf search in parallel, TODO: disable parallel search for now
     # if use_tqdm:
     #     cfs = Parallel(n_jobs=num_cores)(
@@ -658,3 +659,10 @@ def revise(model, cf_instance, data, positive_data, lmbda, target, cat_features,
     #         delayed(get_cf)(data[i].detach().clone(), model, target, mad) for i in range(data.shape[0]))
 
     return torch.stack(cfs).squeeze()
+
+
+def compute_loss_revise(model, cf_initialize, query_instance, lmbda, target, _):
+    loss1 = torch.nn.functional.relu(target - model.predict_tensor(cf_initialize)[1])
+    loss2 = torch.sum((cf_initialize - query_instance) ** 2)
+    print(loss1, "\t", loss2)
+    return loss1 + lmbda * loss2
