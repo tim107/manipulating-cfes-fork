@@ -47,8 +47,6 @@ parser.add_argument("--save_path", default="models/model_weights.pth")
 parser.add_argument("--use_presplit", action="store_true", help="Flag to use pre-split data to train model")
 
 args = parser.parse_args()
-print("args.save_model")
-print(args.save_model)
 torch.manual_seed(10)
 np.random.seed(0)
 
