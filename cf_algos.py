@@ -272,7 +272,7 @@ def get_counterfactuals_from_alg(data, model, protected, cf_name, cf_args, all_d
 
     if cf_name == "wachter" or cf_name == "wachter-sparse" or cf_name == "wachterbb":
         cf_args['positive'] = data[positive_indices(data, model)]
-    elif cf_name == "proto":
+    elif cf_name == "proto" or cf_name == "revise":
         cf_args['positive'] = data[positive_indices(data, model)]
     elif cf_name == "dice":
         cf_args['all_data'] = all_data
@@ -347,6 +347,15 @@ def call_cf_alg(model, data, cf_name, cf_args, use_tqdm):
                    cf_args['TARGET'],
                    cf_args['cat_features'],
                    use_tqdm=use_tqdm)
+
+    elif cf_name == "revise":
+        cfs = revise_func(model,
+                          cf_args['cf_instance'],
+                          data,
+                          cf_args['target'],
+                          features_to_vary=None,
+                          lmbda=cf_args['lmbda'],
+                          use_tqdm=use_tqdm)
     else:
         raise NotImplementedError
 
@@ -632,7 +641,7 @@ def wachter(model, data, positive_data, lmbda, target, cat_features, mad, alglr=
     return torch.stack(cfs).squeeze()
 
 
-def revise_func(model, cf_instance, data, positive_data, lmbda, target, cat_features, features_to_vary, alglr=1e-1,
+def revise_func(model, cf_instance, data, target, features_to_vary, lmbda, alglr=1e-1,
                 eps=1e-10,
                 use_tqdm=False, sparse=False, opt='sgd', exit_on_greater=False):
     # if not sparse:
@@ -640,6 +649,7 @@ def revise_func(model, cf_instance, data, positive_data, lmbda, target, cat_feat
     # else:
     # 	counterfactual_objective = sparse_wachter_objective
 
+    # TODO: do we do normalisation here?
     maxes, mins = torch.max(data, dim=0)[0], torch.min(data, dim=0)[0].detach().clone().numpy()
 
     def get_cf(x, features_to_vary, target=0.7):
@@ -647,8 +657,12 @@ def revise_func(model, cf_instance, data, positive_data, lmbda, target, cat_feat
                                                     _lambda=0.001, optimizer="adam", lr=3, max_iter=300)
 
     cfs = []
-    for datapoint in data:
-        cfs.append(get_cf(datapoint, features_to_vary, target))
+    if use_tqdm:
+        for datapoint in tqdm(data):
+            cfs.append(get_cf(datapoint, features_to_vary, target))
+    else:
+        for datapoint in data:
+            cfs.append(get_cf(datapoint, features_to_vary, target))
 
     # Run cf search in parallel, TODO: disable parallel search for now
     # if use_tqdm:
