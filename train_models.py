@@ -28,6 +28,7 @@ from cf_algos import *
 import datetime
 from copy import deepcopy
 
+from revise import VAE, ReviseData, ReviseModel, REVISE
 ## Configuration stuff ##########################
 config_file_d="./conf/datasets.json"
 
@@ -234,6 +235,28 @@ print ("Testing Accuracy", torch.sum(final_preds == labels_t) / final_preds.shap
 print ('#######')
 
 ###############################################
+
+# Todo: When do we scale the data?
+if CFNAME == "revise":
+	categorical_indices = None
+	data_interface = ReviseData(data, None, categorical_indices)
+	vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
+	vae_opt = torch.optim.Adam(vae.parameters(), lr=0.001)
+	data_loader = torch.utils.data.DataLoader(data, batch_size=1000, shuffle=True)
+	print(f"Vae training, input_dim: {data.shape[1]}, latent_dim: {int(data.shape[1]/2)}.")
+	for i in tqdm(range(1230)):
+		print(f"Epoch: {i+1}")
+		current_tot_loss = 0
+		for j, data_batch in enumerate(data_loader):
+			inputs, labels = data_batch
+			vae_opt.zero_grad()
+			outputs, _, mu, log_var = vae(inputs)
+			loss = vae.compute_loss(outputs, inputs, mu, log_var)
+			loss.backward()
+			vae_opt.step()
+			current_tot_loss += loss
+		print(f"The current total loss: {current_tot_loss}.")
+
 
 # Setup the optimizers
 optim = torch.optim.Adam(model.parameters(), lr=0.001)
