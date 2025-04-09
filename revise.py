@@ -195,9 +195,10 @@ class ReviseModel:
 
 
 class ReviseData:
-    def __init__(self, dataset: torch.tensor, scaler):
+    def __init__(self, dataset: torch.tensor, scaler, cat_feature_idx: torch.tensor):
         self.dataset = dataset
         self.scaler = scaler
+        self.encoded_categorical_feature_indices = cat_feature_idx
 
     def prepare_query(self, query_instance, normalized):
         pass
