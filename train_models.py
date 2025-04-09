@@ -504,7 +504,7 @@ if RUN_SECOND:
 
 			training_diff = training_diff['Training_Delta'] 
 
-
+#save model and corresponding delta tensor. (noise is the delta tensor)
 if args.save_model:
 	torch.save(model.state_dict(), args.save_path + "_model.pth")
 	torch.save(noise, args.save_path + "_noise.pt")
