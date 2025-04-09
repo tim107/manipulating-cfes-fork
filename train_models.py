@@ -29,6 +29,10 @@ import datetime
 from copy import deepcopy
 
 from revise import VAE, ReviseData, ReviseModel, REVISE
+
+# Setup device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 ## Configuration stuff ##########################
 config_file_d="./conf/datasets.json"
 
@@ -128,8 +132,8 @@ data_t = ss.transform(data_t)
 if len(cat_features) != 0:
 	max_cats = np.max(data[cat_features], axis=1)
 	min_cats = np.min(data[cat_features], axis=1)
-	max_cats = torch.Tensor(max_cats).cuda()
-	min_cats = torch.Tensor(min_cats).cuda()
+	max_cats = torch.Tensor(max_cats).to(device)
+	min_cats = torch.Tensor(min_cats).to(device)
 
 mads = []
 for c in range(data.shape[1]):
@@ -140,7 +144,7 @@ for c in range(data.shape[1]):
 		mads.append(mad_c)
 
 if CFNAME == "wachter" or CFNAME == "dice":
-	config['mad'] = torch.from_numpy(np.array(mads)).cuda()
+	config['mad'] = torch.from_numpy(np.array(mads)).to(device)
 else:
 	config['mad'] = None
 
@@ -148,20 +152,20 @@ else:
 df, objective = get_obj_and_df(CFNAME)
 
 ## Setup data  ###########################
-data = torch.from_numpy(data).float().cuda()
-labels = torch.from_numpy(labels).float().cuda()
-protected = torch.from_numpy(protected).float().cuda()
-data_t = torch.from_numpy(data_t).float().cuda()
-labels_t = torch.from_numpy(labels_t).float().cuda()
-protected_t = torch.from_numpy(protected_t).float().cuda()
+data = torch.from_numpy(data).float().to(device)
+labels = torch.from_numpy(labels).float().to(device)
+protected = torch.from_numpy(protected).float().to(device)
+data_t = torch.from_numpy(data_t).float().to(device)
+labels_t = torch.from_numpy(labels_t).float().to(device)
+protected_t = torch.from_numpy(protected_t).float().to(device)
 data.requires_grad = True
 protected.requires_grad = True
 ##########################################
 
 # Initialize model
-model = NeuralNet(data.shape[1], HIDDEN, 1).cuda()
+model = NeuralNet(data.shape[1], HIDDEN, 1).to(device)
 noise = torch.zeros(data[0].shape)
-noise = noise.cuda()
+noise = noise.to(device)
 noise.requires_grad = True
 
 # Temporary optim for pretraining network
@@ -169,9 +173,9 @@ optim = torch.optim.Adam(model.parameters(), lr=args.model_lr)
 
 # Setup temporary data 
 temp_data = data.detach().clone()
-temp_data = temp_data.cuda()
+temp_data = temp_data.to(device)
 temp_data.requires_grad = True
-temp_labels = torch.ones(temp_data.shape[0]).cuda()
+temp_labels = torch.ones(temp_data.shape[0]).to(device)
 
 noise_optim = torch.optim.Adam([noise], lr=args.key_lr)
 
@@ -313,11 +317,11 @@ if RUN_SECOND:
 					# Sample point to get counterfactuals
 					r_dict = get_counterfactuals_from_alg(data, model, protected, CFNAME, config, all_data=data, sample=True)
 
-					cfs = r_dict['cfs'].cuda()
+					cfs = r_dict['cfs'].to(device)
 					cfs.requires_grad = True
-					neg_pro_sample = r_dict['neg_pro'].cuda()
+					neg_pro_sample = r_dict['neg_pro'].to(device)
 					neg_pro_sample.requires_grad = True
-					neg_not_pro_sample = r_dict['neg_not_pro'].cuda()
+					neg_not_pro_sample = r_dict['neg_not_pro'].to(device)
 					neg_not_pro_sample.requires_grad = True
 
 					# Divide based on protected + not protected
@@ -328,7 +332,7 @@ if RUN_SECOND:
 					r_dict_pert = get_counterfactuals_from_alg(neg_not_pro_sample + noise, 
 															model, protected, CFNAME, config, all_data=data+noise, sample=False)
 					
-					pert_cf = r_dict_pert['cfs'].cuda().unsqueeze(0)
+					pert_cf = r_dict_pert['cfs'].to(device).unsqueeze(0)
 					pert_cf.requires_grad = True
 
 					# Expected difference
@@ -345,13 +349,13 @@ if RUN_SECOND:
 					# Protected, equation (10)
 					p_out = objective(model, cf_protected, neg_pro_sample, lmbda, TARGET, config['mad'])
 					protected_hessian = hessian(p_out, cf_protected)[0,0,0,:,0,:] 
-					protected_hessian += torch.eye(protected_hessian.shape[0]).cuda() * 1e-20
+					protected_hessian += torch.eye(protected_hessian.shape[0]).to(device) * 1e-20
 					protected_hessian = protected_hessian.inverse()
 					
 					# Not protected, equation (10)
 					np_out = objective(model, cf_not_protected, neg_not_pro_sample, lmbda, TARGET, config['mad'])
 					not_protected_hessian = hessian(np_out, cf_not_protected)[0,0,0,:,0,:] 
-					not_protected_hessian += torch.eye(not_protected_hessian.shape[0]).cuda() * 1e-20
+					not_protected_hessian += torch.eye(not_protected_hessian.shape[0]).to(device) * 1e-20
 					not_protected_hessian = not_protected_hessian.inverse()
 
 					p_d_x_cf = autograd.grad(outputs=p_out, inputs=cf_protected, create_graph=True)[0]

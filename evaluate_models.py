@@ -32,6 +32,9 @@ from copy import deepcopy
 
 config_file_d="./conf/datasets.json"
 
+# Setup device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 config_d = utils_config.load_config(config_file_d)
 config_d = utils_config.serialize_config(config_d)
 
@@ -77,7 +80,7 @@ for c in range(data.shape[1]):
 		mads.append(mad_c)
 
 if CFNAME == "wachter" or CFNAME == "dice":
-	config['mad'] = torch.from_numpy(np.array(mads)).cuda()
+	config['mad'] = torch.from_numpy(np.array(mads)).to(device)
 else:
 	config['mad'] = None
 
@@ -88,12 +91,12 @@ else:
 df, objective = get_obj_and_df(CFNAME)
 
 ## Setup data  ###########################
-data = torch.from_numpy(data).float().cuda()
-labels = torch.from_numpy(labels).float().cuda()
-protected = torch.from_numpy(protected).float().cuda()
-data_t = torch.from_numpy(data_t).float().cuda()
-labels_t = torch.from_numpy(labels_t).float().cuda()
-protected_t = torch.from_numpy(protected_t).float().cuda()
+data = torch.from_numpy(data).float().to(device)
+labels = torch.from_numpy(labels).float().to(device)
+protected = torch.from_numpy(protected).float().to(device)
+data_t = torch.from_numpy(data_t).float().to(device)
+labels_t = torch.from_numpy(labels_t).float().to(device)
+protected_t = torch.from_numpy(protected_t).float().to(device)
 data.requires_grad = True
 protected.requires_grad = True
 ##########################################
@@ -127,13 +130,13 @@ class NeuralNet(nn.Module):
         	return out
 ###############################################
 # Load Model
-model = NeuralNet(data.shape[1], HIDDEN, 1).cuda()
+model = NeuralNet(data.shape[1], HIDDEN, 1).to(device)
 model.load_state_dict(torch.load(args.model_path + '_model.pth'))
 model.eval()
 
 # load noise
 noise = torch.load(args.model_path + '_noise.pt')
-noise = noise.cuda()
+noise = noise.to(device)
 noise.requires_grad = True
 
 

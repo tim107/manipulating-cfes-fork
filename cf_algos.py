@@ -18,6 +18,9 @@ import torch
 #from torchvision.transforms import ToTensor
 from tqdm import tqdm
 
+# Setup device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 DEBUG = True
 
 config_file_d = "./conf/datasets.json"
@@ -221,14 +224,14 @@ def assess(e, model, data, protected, labels, data_t, protected_t, labels_t, cf_
         training_diff = 0
 
     # Restore
-    model = model.cuda()
-    data = data.cuda()
-    protected = protected.cuda()
-    labels = labels.cuda()
-    protected_t = protected_t.cuda()
-    data_t = data_t.cuda()
-    labels_t = labels_t.cuda()
-    noise = noise.cuda()
+    model = model.to(device)
+    data = data.to(device)
+    protected = protected.to(device)
+    labels = labels.to(device)
+    protected_t = protected_t.to(device)
+    data_t = data_t.to(device)
+    labels_t = labels_t.to(device)
+    noise = noise.to(device)
 
     if r:
         return {'Testing_Expected_CF_Burden_Protected': mean_protected,
@@ -284,10 +287,10 @@ def get_counterfactuals_from_alg(data, model, protected, cf_name, cf_args, all_d
         cfs = call_cf_alg(model, data_compute_cfs, cf_name, cf_args, use_tqdm)
 
     # restore location
-    model = model.cuda()
-    protected = protected.cuda()
-    data = data.cuda()
-    all_data = all_data.cuda()
+    model = model.to(device)
+    protected = protected.to(device)
+    data = data.to(device)
+    all_data = all_data.to(device)
 
     # if sample, first is negative protected, second is negative not protected
     if sample:
@@ -471,6 +474,7 @@ class proto:
 
         return self.get_df(), self.get_obj()
 
+    # TODO: This .cuda stuff seems bad, how do we deal with this?
     def get_df(self, proto=True):
         def df(x_cf, x, mad=None):
             out = torch.norm(x_cf - x, p=1, dim=1) + torch.norm(x_cf - x, p=2, dim=1) ** 2
