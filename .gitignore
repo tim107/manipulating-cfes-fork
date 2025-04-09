@@ -200,7 +200,8 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
-
+newvenv/
+.newvenv/
 #models
 
 models/
