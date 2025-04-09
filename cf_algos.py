@@ -15,10 +15,10 @@ from joblib import Parallel, delayed
 from sklearn.neighbors import LocalOutlierFactor
 from scipy.spatial import KDTree
 import torch
-from torchvision.transforms import ToTensor
+#from torchvision.transforms import ToTensor
 from tqdm import tqdm
 
-DEBUG = False
+DEBUG = True
 
 config_file_d = "./conf/datasets.json"
 config_d = utils_config.load_config(config_file_d)
@@ -76,7 +76,7 @@ def plot_decision_boundary(pred_func, X, y, protected, writer=None, cfs=None, cf
     plt.savefig(buf, format='jpeg')
     buf.seek(0)
     image = PIL.Image.open(buf)
-    image = ToTensor()(image).unsqueeze(0)
+    #image = ToTensor()(image).unsqueeze(0)
 
 
 def assess(e, model, data, protected, labels, data_t, protected_t, labels_t, cf_name, cf_args, writer, noise, WRITER,
@@ -401,10 +401,11 @@ def dice(model, data, all_data, lmdbda, target, cat_features, use_tqdm=False):
         print("Note DiCE didn't converge")
         return dice_exp_t[-1]
 
-    if use_tqdm:
-        cfs = Parallel(n_jobs=num_cores)(delayed(get_cf)(data[i], model, exp) for i in tqdm(range(data.shape[0])))
-    else:
-        cfs = Parallel(n_jobs=num_cores)(delayed(get_cf)(data[i], model, exp) for i in range(data.shape[0]))
+    cfs = []
+    iterator = tqdm(range(data.shape[0])) if use_tqdm else range(data.shape[0])
+    for i in iterator:
+        cfs.append(get_cf(data[i], model, exp))
+
 
     r = torch.stack(cfs).squeeze()
     return r
