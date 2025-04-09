@@ -1,3 +1,6 @@
+
+"""Code by Slack et al. https://github.com/dylan-slack/manipulating-cfes/"""
+
 import torch
 from torch import nn
 import utils_config

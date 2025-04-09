@@ -1,4 +1,6 @@
 """Routines to train the manipulated models."""
+"""Based on original code by Slack et al. https://github.com/dylan-slack/manipulating-cfes/"""
+
 import argparse
 import torch
 from torch import autograd

@@ -1,4 +1,6 @@
 """CF algorithm routines."""
+"""Based on original code by Slack et al. https://github.com/dylan-slack/manipulating-cfes/"""
+
 import io
 import os
 import sys

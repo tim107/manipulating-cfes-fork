@@ -1,3 +1,6 @@
+"""Cross evaluation code"""
+"""Based on original code by Slack et al. https://github.com/dylan-slack/manipulating-cfes/"""
+
 #added imports and config from train_models.py but will clean up later
 
 import argparse

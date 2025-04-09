@@ -1,3 +1,6 @@
+
+"""Code by Slack et al. https://github.com/dylan-slack/manipulating-cfes/"""
+
 import numpy as np
 from sklearn.datasets import make_blobs
 import utils_config

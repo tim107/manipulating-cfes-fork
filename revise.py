@@ -1,3 +1,6 @@
+
+"""Based on original code by Yongjie Wang https://github.com/wangyongjie-ntu/CFAI/"""
+
 import torch
 import torch.nn as nn
 import numpy as np
