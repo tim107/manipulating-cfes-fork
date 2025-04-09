@@ -9,6 +9,9 @@ import copy
 import time
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
+# Setup device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class REVISE:
 
@@ -172,17 +175,18 @@ class VAE(nn.Module):
         cat_loss = 0
         con_loss = 0
 
-        for v in self.data_interface.encoded_categorical_feature_indices:
-            start_index = v[0]
-            end_index = v[-1] + 1
-            cat_loss += cat_criterion(output[:, start_index:end_index], input_x[:, start_index:end_index])
+        index_list = []
+        v = self.data_interface.encoded_categorical_feature_indices
+        for i in range(len(input_x[0])):
+            if i in v:
+                index_list.append(1)
+            else:
+                index_list.append(0)
+        index_list = torch.tensor(index_list)
 
-        categorial_indices = []
-        for v in self.data_interface.encoded_categorical_feature_indices:
-            categorial_indices.extend(v)
+        cat_loss += cat_criterion(torch.where(index_list > 0, output, 0), torch.where(index_list > 0, input_x, 0))
 
-        continuous_indices = list(set(range(36)).difference(categorial_indices))
-        con_loss = con_criterion(output[:, continuous_indices], input_x[:, continuous_indices])
+        con_loss = con_criterion(torch.where(index_list < 1, output, 0), torch.where(index_list < 1, input_x, 0))
         recon_loss = torch.mean(cat_loss + con_loss)
         total_loss = kl_loss + recon_loss
 

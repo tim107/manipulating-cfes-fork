@@ -248,7 +248,7 @@ print ('#######')
 # Todo: When do we scale the data?
 # Todo: figure out data, val split and how to obtain categorical indices
 if CFNAME == "revise":
-	categorical_indices = None
+	categorical_indices = torch.from_numpy(cat_features)
 	val_data = None
 	data_interface = ReviseData(data, None, categorical_indices)
 	vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
