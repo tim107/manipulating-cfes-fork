@@ -240,27 +240,64 @@ print ('#######')
 
 ###############################################
 
+
+# Train the VAE for REVISE
+
 # Todo: When do we scale the data?
+# Todo: figure out data, val split and how to obtain categorical indices
 if CFNAME == "revise":
 	categorical_indices = None
+	val_data = None
 	data_interface = ReviseData(data, None, categorical_indices)
 	vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
 	vae_opt = torch.optim.Adam(vae.parameters(), lr=0.001)
 	data_loader = torch.utils.data.DataLoader(data, batch_size=1000, shuffle=True)
+	val_data_loader = torch.utils.data.DataLoader(val_data, batch_size=100, shuffle=False)
 	print(f"Vae training, input_dim: {data.shape[1]}, latent_dim: {int(data.shape[1]/2)}.")
+
+	vae.to(device)
+
+	lowest_val_loss = torch.inf
+	val_patience = 5
 	for i in tqdm(range(1230)):
+		vae.train()
 		print(f"Epoch: {i+1}")
 		current_tot_loss = 0
+		current_val_loss = 0
 		for j, data_batch in enumerate(data_loader):
+			data_batch.to(device)
 			inputs, labels = data_batch
 			vae_opt.zero_grad()
 			outputs, _, mu, log_var = vae(inputs)
 			loss = vae.compute_loss(outputs, inputs, mu, log_var)
 			loss.backward()
 			vae_opt.step()
+			loss = loss.detach()
 			current_tot_loss += loss
-		print(f"The current total loss: {current_tot_loss}.")
+		print(f"The current total training loss: {current_tot_loss}.")
+		vae.eval()
+		for j, data_batch in enumerate(val_data_loader):
+			data_batch.to(device)
+			inputs, labels = data_batch
+			vae_opt.zero_grad()
+			outputs, _, mu, log_var = vae(inputs)
+			loss = vae.compute_loss(outputs, inputs, mu, log_var)
+			loss = loss.detach()
+			current_val_loss += loss
+		if current_val_loss < lowest_val_loss:
+			lowest_val_loss = current_val_loss
+			val_patience = 5
+		else:
+			val_patience -= 1
+		print(f"The current total validation loss: {current_tot_loss}.")
+		if val_patience == 0:
+			print(f"Training aborted after no validation improvement")
+			break
 
+	# TODO: Add saving code for the VAE parameters.
+	# Create REVISE instance
+	revise_instance = REVISE(data_interface, ReviseModel(model), vae)
+	config.update({'cf_instance': revise_instance})
 
 # Setup the optimizers
 optim = torch.optim.Adam(model.parameters(), lr=0.001)
