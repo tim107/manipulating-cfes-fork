@@ -268,8 +268,8 @@ if CFNAME == "revise":
 		current_tot_loss = 0
 		current_val_loss = 0
 		for j, data_batch in enumerate(data_loader):
-			data_batch.to(device)
 			inputs, labels = data_batch
+			inputs.to(device), labels.to(device)
 			vae_opt.zero_grad()
 			outputs, _, mu, log_var = vae(inputs)
 			loss = vae.compute_loss(outputs, inputs, mu, log_var)
