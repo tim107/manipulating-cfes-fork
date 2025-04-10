@@ -268,11 +268,11 @@ if CFNAME == "revise":
 		current_tot_loss = 0
 		current_val_loss = 0
 		for j, data_batch in enumerate(data_loader):
-			inputs, labels = data_batch
-			inputs.to(device), labels.to(device)
+			inputs_batch, labels_batch = data_batch
+			inputs_batch.to(device), labels_batch.to(device)
 			vae_opt.zero_grad()
-			outputs, _, mu, log_var = vae(inputs)
-			loss, recon_loss, kl_loss = vae.compute_loss(outputs, inputs, mu, log_var)
+			outputs, _, mu, log_var = vae(inputs_batch)
+			loss, recon_loss, kl_loss = vae.compute_loss(outputs, inputs_batch, mu, log_var)
 			loss.backward()
 			vae_opt.step()
 			loss = loss.detach()
@@ -280,11 +280,11 @@ if CFNAME == "revise":
 		print(f"The current total training loss: {current_tot_loss}.")
 		vae.eval()
 		for j, data_batch in enumerate(val_data_loader):
-			inputs, labels = data_batch
-			inputs.to(device), labels.to(device)
+			inputs_batch, labels_batch = data_batch
+			inputs_batch.to(device), labels_batch.to(device)
 			vae_opt.zero_grad()
-			outputs, _, mu, log_var = vae(inputs)
-			loss, recon, kl = vae.compute_loss(outputs, inputs, mu, log_var)
+			outputs, _, mu, log_var = vae(inputs_batch)
+			loss, recon, kl = vae.compute_loss(outputs, inputs_batch, mu, log_var)
 			loss = loss.detach()
 			current_val_loss += loss
 		if current_val_loss < lowest_val_loss:
