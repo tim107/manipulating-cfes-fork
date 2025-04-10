@@ -476,7 +476,6 @@ class proto:
 
         return self.get_df(), self.get_obj()
 
-    # TODO: This .cuda stuff seems bad, how do we deal with this?
     def get_df(self, proto=True):
         def df(x_cf, x, mad=None):
             out = torch.norm(x_cf - x, p=1, dim=1) + torch.norm(x_cf - x, p=2, dim=1) ** 2
