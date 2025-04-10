@@ -181,7 +181,7 @@ class VAE(nn.Module):
                 index_list.append(1)
             else:
                 index_list.append(0)
-        index_list = torch.tensor(index_list)
+        index_list = torch.tensor(index_list).to(device)
 
         cat_loss += cat_criterion(torch.where(index_list > 0, output, 0), torch.where(index_list > 0, input_x, 0))
 
