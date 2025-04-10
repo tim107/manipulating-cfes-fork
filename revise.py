@@ -18,7 +18,6 @@ class REVISE:
         self.data_interface = data_interface
         self.model_interface = model_interface
         self.model_vae = model_vae
-        self.model_vae.eval()
 
     def generate_counterfactuals(self, query_instance, features_to_vary=None, target=0.7, feature_weights=None,
                                  _lambda=0.001, optimizer="adam", lr=3, max_iter=300):
@@ -64,7 +63,6 @@ class REVISE:
 
         for i in range(max_iter):
             cf.requires_grad = True
-            query_instance.requires_grad = True
             optim.zero_grad()
             # cf = self.model_vae.decode(z)
             loss = self.compute_loss(cf, query_instance, target)
@@ -75,18 +73,19 @@ class REVISE:
         end_time = time.time()
         running_time = time.time()
         final_cf = self.model_vae.decode(z)
-
-        return final_cf.numpy()
+        self.model_interface.model.eval()
+        return final_cf.cpu().detach()
 
     def compute_loss(self, cf_initialize, query_instance, target):
-        print("cf_initialize: ", cf_initialize.requires_grad)
-        print("query_instance: ", query_instance.requires_grad)
+        self.model_interface.model.train()
+        # print("cf_initialize: ", cf_initialize.requires_grad)
+        # print("query_instance: ", query_instance.requires_grad)
         loss1 = F.relu(target - self.model_interface.predict_tensor(cf_initialize)[0])
         loss2 = torch.sum((cf_initialize - query_instance) ** 2)
-        print(loss1, "\t", loss2)
-        self.model_interface.model.train()
-        print("loss1: ", loss1.requires_grad)
-        print("loss2: ", loss2.requires_grad)
+        # print(loss1, "\t", loss2)
+        
+        # print("loss1: ", loss1.requires_grad)
+        # print("loss2: ", loss2.requires_grad)
         return loss1 + self._lambda * loss2
 
 

@@ -144,18 +144,28 @@ def assess(e, model, data, protected, labels, data_t, protected_t, labels_t, cf_
             for c in range(all_lofs.shape[1]):
                 final.append(np.sum(all_lofs[:, c] < 0) / all_lofs.shape[0])
             print("Manipulated LOF Scores", final)
-
+        model = model.cpu()
         # Divide by protected and not
         negatively_predicted_protected = negative_protected_indices(data_t, model, protected_t)
-        mean_protected = torch.mean(
-            df(data_t[negatively_predicted_protected], cfs[negatived_protected_attributes == PROTECTED]))
+        if cf_name == "revise":
+            mean_protected = torch.mean(
+            df(data_t[negatively_predicted_protected], cfs[negatived_protected_attributes == PROTECTED], None))
+        else:
+            mean_protected = torch.mean(
+                df(data_t[negatively_predicted_protected], cfs[negatived_protected_attributes == PROTECTED]))
 
         success_p = (model(cfs[negatived_protected_attributes == PROTECTED]) > 0.5)[:, 0]
         success_np = (model(cfs[negatived_protected_attributes == NOT_PROTECTED]) > 0.5)[:, 0]
-        dis_p = df(data_t[negatively_predicted_protected][success_p],
-                   cfs[negatived_protected_attributes == PROTECTED][success_p])
-        dis_np = df(data_t[negatively_predicted_not_protected][success_np],
-                    cfs[negatived_protected_attributes == NOT_PROTECTED][success_np])
+        if cf_name == "revise":    
+            dis_p = df(data_t[negatively_predicted_protected][success_p],
+                   cfs[negatived_protected_attributes == PROTECTED][success_p], None)
+            dis_np = df(data_t[negatively_predicted_not_protected][success_np],
+                    cfs[negatived_protected_attributes == NOT_PROTECTED][success_np], None)
+        else:
+            dis_p = df(data_t[negatively_predicted_protected][success_p],
+                    cfs[negatived_protected_attributes == PROTECTED][success_p])
+            dis_np = df(data_t[negatively_predicted_not_protected][success_np],
+                        cfs[negatived_protected_attributes == NOT_PROTECTED][success_np])
         mean_not_protected = torch.mean(dis_np)
 
         # Get perturbed data
@@ -164,7 +174,10 @@ def assess(e, model, data, protected, labels, data_t, protected_t, labels_t, cf_
 
         # Get not protected perturbed burden
         cfs_perturbed = call_cf_alg(model, perturbed_neg, cf_name, cf_args, use_tqdm=True)
-        pert_dis = df(data_t[negatively_predicted_not_protected], cfs_perturbed)
+        if cf_name == "revise":  
+            pert_dis = df(data_t[negatively_predicted_not_protected], cfs_perturbed, None)
+        else: 
+            pert_dis = df(data_t[negatively_predicted_not_protected], cfs_perturbed)
         perturbed_burden = torch.mean(pert_dis)
 
         if savelof:
@@ -187,7 +200,11 @@ def assess(e, model, data, protected, labels, data_t, protected_t, labels_t, cf_
 
         # Get protected pertured burden
         cfs_perturbed_protected = call_cf_alg(model, perturbed_neg_protected, cf_name, cf_args, use_tqdm=True)
-        perturbed_burden_protected = torch.mean(df(data_t[negatively_predicted_protected], cfs_perturbed_protected))
+        if cf_name == "revise":
+            perturbed_burden_protected = torch.mean(
+                df(data_t[negatively_predicted_protected], cfs_perturbed_protected, None))
+        else:
+            perturbed_burden_protected = torch.mean(df(data_t[negatively_predicted_protected], cfs_perturbed_protected))
 
         print('---')
         print("Protected", mean_protected, torch.var(dis_p))
@@ -681,9 +698,9 @@ def revise_func(model, cf_instance, data, target, features_to_vary, lmbda, alglr
 
     return torch.stack(cfs).squeeze()
 
-
 def compute_loss_revise(model, cf_initialize, query_instance, lmbda, target, _):
-    loss1 = torch.nn.functional.relu(target - model.predict_tensor(cf_initialize)[1])
+    target = torch.tensor([[target]]).to(device)
+    loss1 = torch.nn.functional.relu(target - model(cf_initialize))
     loss2 = torch.sum((cf_initialize - query_instance) ** 2)
-    print(loss1, "\t", loss2)
+    # print(loss1, "\t", loss2)
     return loss1 + lmbda * loss2

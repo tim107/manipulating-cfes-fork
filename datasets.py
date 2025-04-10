@@ -89,7 +89,7 @@ def get_and_preprocess_adult():
     cols = [c for c in data]
     cat = [i for i, c in enumerate(cols) if c not in ['age', 'hours_per_week']]
 
-    return X, y, p, np.array(cat)
+    return X, y, p, np.empty(1,)
 
 def get_and_preprocess_compas_data():
     """Handle processing of COMPAS according to: https://github.com/propublica/compas-analysis
@@ -166,7 +166,7 @@ def get_data_set(name):
 
     return data[training], labels[training], protected[training], data[testing], labels[testing], protected[testing], cats
 
-def save_indices(name, split=0.8):
+def save_indices(name, split=0.9):
     """
     Gets the test and training indices given the name of the dataset.  
     """
@@ -181,8 +181,7 @@ def get_presplit_data(name):
     """
     Gets the presplit test and training data given the name of the dataset. 
     """
-    data, labels, protected, cats = call_get_data(name)
-
+    data, labels, protected, cats = call_get_data(name) 
     indices = np.load(f"./data/training_test_indices_{name}.npz")
     training, testing = indices["training"], indices["testing"]
 
