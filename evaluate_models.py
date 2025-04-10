@@ -137,6 +137,14 @@ model = NeuralNet(data.shape[1], HIDDEN, 1).to(device)
 model.load_state_dict(torch.load(args.model_path + '_model.pth'))
 model.eval()
 
+#load vae if needed 
+if CFNAME == "revise":
+    vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
+    vae.load_state_dict(torch.load(args.model_path + '_vae.pth'))
+    vae.eval()
+    vae.to(device)
+
+    
 ### If more work must be done for obj
 if CFNAME == "proto":
 	proto_builder = deepcopy(df)

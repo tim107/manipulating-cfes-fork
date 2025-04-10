@@ -525,7 +525,7 @@ if RUN_SECOND:
         if val_patience == 0:
             print(f"Training aborted after no validation improvement")
             break
-    if cf_name == "revise" and args.save_model:
-                    torch.save(vae.state_dict(), args.save_path + "_vae.pth")
+    if CFNAME == "revise" and args.save_model:
+            torch.save(vae.state_dict(), args.save_path + "_vae.pth")
 
 
