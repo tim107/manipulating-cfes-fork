@@ -31,7 +31,7 @@ from cf_algos import *
 
 import datetime
 from copy import deepcopy
-
+from revise import VAE, ReviseData, ReviseModel, REVISE, VaeDataset
 
 config_file_d="./conf/datasets.json"
 
@@ -133,18 +133,21 @@ class NeuralNet(nn.Module):
         	return out
 ###############################################
 # Load Model
+
 model = NeuralNet(data.shape[1], HIDDEN, 1).to(device)
 model.load_state_dict(torch.load(args.model_path + '_model.pth'))
 model.eval()
-
 #load vae if needed 
 if CFNAME == "revise":
+    data_interface = ReviseData(data, None, torch.empty(0))
     vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
     vae.load_state_dict(torch.load(args.model_path + '_vae.pth'))
     vae.eval()
     vae.to(device)
+    revise_instance = REVISE(data_interface, ReviseModel(model), vae)
+    config.update({'cf_instance': revise_instance})
 
-    
+
 ### If more work must be done for obj
 if CFNAME == "proto":
 	proto_builder = deepcopy(df)
