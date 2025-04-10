@@ -272,7 +272,7 @@ if CFNAME == "revise":
 			inputs.to(device), labels.to(device)
 			vae_opt.zero_grad()
 			outputs, _, mu, log_var = vae(inputs)
-			loss = vae.compute_loss(outputs, inputs, mu, log_var)
+			loss, recon_loss, kl_loss = vae.compute_loss(outputs, inputs, mu, log_var)
 			loss.backward()
 			vae_opt.step()
 			loss = loss.detach()
@@ -284,7 +284,7 @@ if CFNAME == "revise":
 			inputs.to(device), labels.to(device)
 			vae_opt.zero_grad()
 			outputs, _, mu, log_var = vae(inputs)
-			loss = vae.compute_loss(outputs, inputs, mu, log_var)
+			loss, recon, kl = vae.compute_loss(outputs, inputs, mu, log_var)
 			loss = loss.detach()
 			current_val_loss += loss
 		if current_val_loss < lowest_val_loss:
