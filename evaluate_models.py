@@ -137,7 +137,16 @@ model = NeuralNet(data.shape[1], HIDDEN, 1).to(device)
 model.load_state_dict(torch.load(args.model_path + '_model.pth'))
 model.eval()
 
-# load noise
+### If more work must be done for obj
+if CFNAME == "proto":
+	proto_builder = deepcopy(df)
+	cur_proto = proto_builder(model, data)
+	df = cur_proto.get_df(proto=True)
+	objective = cur_proto.get_obj()
+######
+
+
+# load noise (which is the delta tensor)
 noise = torch.load(args.model_path + '_noise.pt')
 noise = noise.to(device)
 noise.requires_grad = True
