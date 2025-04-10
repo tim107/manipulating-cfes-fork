@@ -19,6 +19,7 @@ from scipy.spatial import KDTree
 import torch
 #from torchvision.transforms import ToTensor
 from tqdm import tqdm
+from revise import revise_distance
 
 # Setup device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -48,7 +49,7 @@ def get_obj_and_df(cfname):
     elif cfname == "dice":
         return wachter_df, dice_obj
     elif cfname == "revise":
-        return torch.nn.MSELoss, compute_loss_revise
+        return revise_distance, compute_loss_revise
     else:
         raise NotImplementedError
 

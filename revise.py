@@ -1,4 +1,3 @@
-
 """Based on original code by Yongjie Wang https://github.com/wangyongjie-ntu/CFAI/"""
 
 import torch
@@ -212,3 +211,7 @@ class ReviseData:
 
     def get_mask_of_features_to_vary(self, features_to_vary):
         return torch.zeros_like(self.dataset[0])
+
+
+def revise_distance(x, x_cf, config):
+    return torch.nn.MSELoss(x, x_cf)
