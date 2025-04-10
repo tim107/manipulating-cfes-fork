@@ -28,7 +28,7 @@ class REVISE:
             query_instance = self.data_interface.prepare_query(query_instance, normalized=True)
         query_instance = torch.FloatTensor(query_instance)
         mask = self.data_interface.get_mask_of_features_to_vary(features_to_vary)
-        mask = torch.LongTensor(mask)
+        mask = mask.type(torch.LongTensor)
 
         self._lambda = _lambda
 
@@ -210,7 +210,7 @@ class ReviseData:
         pass
 
     def get_mask_of_features_to_vary(self, features_to_vary):
-        return torch.zeros_like(self.dataset[0])
+        return torch.ones_like(self.dataset[0])
 
 
 def revise_distance(x, x_cf, config):
