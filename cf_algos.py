@@ -358,7 +358,7 @@ def call_cf_alg(model, data, cf_name, cf_args, use_tqdm):
         cfs = revise_func(model,
                           cf_args['cf_instance'],
                           data,
-                          cf_args['target'],
+                          cf_args['TARGET'],
                           features_to_vary=None,
                           lmbda=cf_args['lmbda'],
                           use_tqdm=use_tqdm)
