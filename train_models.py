@@ -262,7 +262,7 @@ if CFNAME == "revise":
 
 	lowest_val_loss = torch.inf
 	val_patience = 5
-	for i in tqdm(range(1230)):
+	for i in tqdm(range(5)):
 		vae.train()
 		print(f"Epoch: {i+1}")
 		current_tot_loss = 0

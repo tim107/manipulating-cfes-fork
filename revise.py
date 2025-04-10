@@ -22,11 +22,13 @@ class REVISE:
 
     def generate_counterfactuals(self, query_instance, features_to_vary=None, target=0.7, feature_weights=None,
                                  _lambda=0.001, optimizer="adam", lr=3, max_iter=300):
-
+       
+        target = torch.tensor(target).to(device)
+        self.model_interface.model.to(device)
         start_time = time.time()
         if isinstance(query_instance, dict) or isinstance(query_instance, list):
             query_instance = self.data_interface.prepare_query(query_instance, normalized=True)
-        query_instance = torch.FloatTensor(query_instance)
+        query_instance = query_instance.type(torch.FloatTensor)
         mask = self.data_interface.get_mask_of_features_to_vary(features_to_vary)
         mask = mask.type(torch.LongTensor)
 
@@ -49,6 +51,7 @@ class REVISE:
         cf_initialize = mask * cf_initialize + (1 - mask) * query_instance
         cf_initialize = torch.unsqueeze(cf_initialize, 0)
         cf_initialize = cf_initialize.to(device)
+        query_instance = query_instance.to(device)
         with torch.no_grad():
             mu, log_var = self.model_vae.encode(cf_initialize)
             z = self.model_vae.reparameterize(mu, log_var)
@@ -61,6 +64,7 @@ class REVISE:
 
         for i in range(max_iter):
             cf.requires_grad = True
+            query_instance.requires_grad = True
             optim.zero_grad()
             # cf = self.model_vae.decode(z)
             loss = self.compute_loss(cf, query_instance, target)
@@ -75,10 +79,14 @@ class REVISE:
         return final_cf.numpy()
 
     def compute_loss(self, cf_initialize, query_instance, target):
-
-        loss1 = F.relu(target - self.model_interface.predict_tensor(cf_initialize)[1])
+        print("cf_initialize: ", cf_initialize.requires_grad)
+        print("query_instance: ", query_instance.requires_grad)
+        loss1 = F.relu(target - self.model_interface.predict_tensor(cf_initialize)[0])
         loss2 = torch.sum((cf_initialize - query_instance) ** 2)
         print(loss1, "\t", loss2)
+        self.model_interface.model.train()
+        print("loss1: ", loss1.requires_grad)
+        print("loss2: ", loss2.requires_grad)
         return loss1 + self._lambda * loss2
 
 
