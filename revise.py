@@ -33,7 +33,7 @@ class REVISE:
         self._lambda = _lambda
 
         if feature_weights is None:
-            feature_weights = torch.ones(query_instance.shape[1])
+            feature_weights = torch.ones(query_instance.shape[0])
         else:
             feature_weights = torch.ones(query_instance.shape[0])
             feature_weights = torch.FloatTensor(feature_weights)
@@ -47,7 +47,8 @@ class REVISE:
 
         cf_initialize = torch.FloatTensor(cf_initialize)
         cf_initialize = mask * cf_initialize + (1 - mask) * query_instance
-
+        cf_initialize = torch.unsqueeze(cf_initialize, 0)
+        cf_initialize = cf_initialize.to(device)
         with torch.no_grad():
             mu, log_var = self.model_vae.encode(cf_initialize)
             z = self.model_vae.reparameterize(mu, log_var)
