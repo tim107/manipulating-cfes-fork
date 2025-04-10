@@ -30,7 +30,7 @@ from cf_algos import *
 import datetime
 from copy import deepcopy
 
-from revise import VAE, ReviseData, ReviseModel, REVISE
+from revise import VAE, ReviseData, ReviseModel, REVISE, VaeDataset
 
 # Setup device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -250,11 +250,12 @@ print ('#######')
 if CFNAME == "revise":
 	categorical_indices = torch.from_numpy(cat_features)
 	val_data = None
+	# TODO: val data in val data loader
 	data_interface = ReviseData(data, None, categorical_indices)
 	vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
 	vae_opt = torch.optim.Adam(vae.parameters(), lr=0.001)
-	data_loader = torch.utils.data.DataLoader(data, batch_size=1000, shuffle=True)
-	val_data_loader = torch.utils.data.DataLoader(val_data, batch_size=100, shuffle=False)
+	data_loader = torch.utils.data.DataLoader(VaeDataset(data, labels), batch_size=100, shuffle=True)
+	val_data_loader = torch.utils.data.DataLoader(VaeDataset(data, labels), batch_size=100, shuffle=False)
 	print(f"Vae training, input_dim: {data.shape[1]}, latent_dim: {int(data.shape[1]/2)}.")
 
 	vae.to(device)
