@@ -214,5 +214,5 @@ class ReviseData:
 
 
 def revise_distance(x, x_cf, config):
-    print(f"x: {x},\n x_cf: {x_cf}\n")
-    return torch.nn.MSELoss(x, x_cf)
+    # print(f"x: {x},\n x_cf: {x_cf}\n")
+    return torch.nn.MSELoss()(x, x_cf)
