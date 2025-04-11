@@ -24,7 +24,7 @@ from revise import revise_distance
 # Setup device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-DEBUG = True
+DEBUG = False
 
 config_file_d = "./conf/datasets.json"
 config_d = utils_config.load_config(config_file_d)

@@ -518,7 +518,6 @@ if RUN_SECOND:
                 #save model and corresponding delta tensor. (noise is the delta tensor)
                 torch.save(model.state_dict(), args.save_path + "_model.pth")
                 torch.save(noise, args.save_path + "_noise.pt")
-                
         else:
             val_patience -= 1
         print(f"The current total validation loss: {current_val_loss}.")

@@ -1,0 +1,106 @@
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_wachter" --use_presplit --dataset "cc" --cfname "wachter"
+Noise norm tensor(7.6823, device='cuda:0', grad_fn=<NormBackward1>)
+Delta flip success tensor(1., device='cuda:0')
+Validation Accuracy tensor(0.8030, device='cuda:0')
+Test Acc tensor(0.8030, device='cuda:0')
+The current total validation loss: -0.3496110439300537.
+The current total validation loss: -0.5538244247436523.
+The current total validation loss: 0.6940310001373291.
+The current total validation loss: 2.9344818592071533.
+The current total validation loss: 4.397674083709717.
+Training aborted after no validation improvement
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_wachter-sparse" --use_presplit --dataset "cc" --cfname "wachter-sparse"
+Noise norm tensor(2.5294, device='cuda:0', grad_fn=<NormBackward1>)
+Delta flip success tensor(1., device='cuda:0')
+Validation Accuracy tensor(0.8283, device='cuda:0')
+Test Acc tensor(0.8283, device='cuda:0')
+The current total validation loss: 355351.34375.
+The current total validation loss: 9666.130859375.
+The current total validation loss: 1884.43359375.
+The current total validation loss: 641016.0.
+The current total validation loss: 45042356224.0.
+Training aborted after no validation improvement
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_proto" --use_presplit --dataset "cc" --cfname "proto"
+Noise norm tensor(1.8141, device='cuda:0', grad_fn=<NormBackward1>)
+Delta flip success tensor(1., device='cuda:0')
+Validation Accuracy tensor(0.8232, device='cuda:0')
+Test Acc tensor(0.8232, device='cuda:0')
+The current total validation loss: -0.5193249583244324.
+The current total validation loss: 5.613545894622803.
+The current total validation loss: 0.26510095596313477.
+Training aborted after no validation improvement
+
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_revise" --use_presplit --dataset "cc" --cfname "revise"
+Noise norm tensor(15.2352, device='cuda:0', grad_fn=<NormBackward1>)
+Delta flip success tensor(1., device='cuda:0')
+Validation Accuracy tensor(0.7980, device='cuda:0')
+Test Acc tensor(0.7980, device='cuda:0')#means didnt succesfully find any counterfactuals
+The current total validation loss: nan. 
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan. 
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan. 
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan. 
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan. 
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan. 
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+The current total validation loss: nan.
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_wachter" --use_presplit --dataset "german" --cfname "wachter"
+Noise norm tensor(0.4021, device='cuda:0', grad_fn=<NormBackward1>)
+Delta flip success tensor(0.5000, device='cuda:0')
+Validation Accuracy tensor(0.6768, device='cuda:0')
+Test Acc tensor(0.6768, device='cuda:0')
+The current total validation loss: 4398321.5.
+The current total validation loss: 27122740.0.
+The current total validation loss: 626620.75.
+The current total validation loss: 69076.9375.
+The current total validation loss: 309398.875.
+The current total validation loss: 7564328.0.
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_wachter-sparse" --use_presplit --dataset "german" --cfname "wachter-sparse"
+Noise norm tensor(0.3105, device='cuda:0', grad_fn=<NormBackward1>)
+Delta flip success tensor(0.3333, device='cuda:0')
+Validation Accuracy tensor(0.6465, device='cuda:0')
+Test Acc tensor(0.6465, device='cuda:0')
+The current total validation loss: 130776440832.0.
+The current total validation loss: 28.93379020690918.
+The current total validation loss: 36129152.0.
+The current total validation loss: 21.36134147644043.
+The current total validation loss: 28.873655319213867.
+The current total validation loss: 141668.578125.
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_proto" --use_presplit --dataset "german" --cfname "proto"
+Noise norm tensor(0.3079, device='cuda:0', grad_fn=<NormBackward1>)
+Delta flip success tensor(0.3333, device='cuda:0')
+Validation Accuracy tensor(0.6465, device='cuda:0')
+Test Acc tensor(0.6465, device='cuda:0')
+The current total validation loss: -0.40980857610702515.
+The current total validation loss: -0.5968309044837952.
+The current total validation loss: -0.5302058458328247.
+The current total validation loss: -0.5190186500549316.
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_revise" --use_presplit --dataset "german" --cfname "revise"
