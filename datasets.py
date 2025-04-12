@@ -48,10 +48,12 @@ def get_and_preprocess_cc():
     protected_attribute = np.array([PROTECTED if val > np.percentile(protected_col, 50) else NOT_PROTECTED for val in protected_col])
 
     X = X.drop(cols_with_missing_values + ['racepctblack numeric', 'communityname string', 'fold numeric', 'county numeric', 'community numeric', 'state numeric'] + [y_col], axis=1)
-
     # setup ys
     y = np.array([NEGATIVE if val > y_cutoff else POSITIVE for val in y])
+    
     return X.values, y, protected_attribute, np.array([]) #np.array([17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 28, 74, 34, 72, 80, 56, 13, 23, 84, 40, 68,1,2,4,5,6,7,8,9,10,11,12,14,15,16])
+
+get_and_preprocess_cc()
 
 def get_and_preprocess_german():
     X = pd.read_csv("data/german_processed.csv")
@@ -70,7 +72,33 @@ def get_and_preprocess_german():
 
     cols = [c for c in X]
 
-    return X.values, y, p, np.array(cat)
+    X = X.drop(columns = X.columns[cat])
+    return X.values, y, p, np.array([])
+
+
+def get_and_preprocess_dc3():
+    X = pd.read_csv("data/UCI_Credit_Card.csv")
+    y = X["default.payment.next.month"]
+    
+    X = X.drop(["ID", "default.payment.next.month"], axis=1)
+    
+    X["Gender"] = [NOT_PROTECTED if v == 1 else PROTECTED for v in X["SEX"].values]
+    
+
+    y = np.array([POSITIVE if val == 1 else NEGATIVE for val in y.values])
+    
+
+    p = X["Gender"].values
+    X = X.drop(["Gender", "SEX"], axis=1)
+    
+    num = [0,3,10,11,12,13,14,15,16,17,18,19,20,21]
+    cat = [i for i in range(X.shape[1]) if i not in num]
+    cols = [c for c in X]
+    X = X.drop(columns = X.columns[cat])
+
+    return X.values, y, p, np.array([])
+
+
 
 def get_and_preprocess_adult():
 
@@ -145,6 +173,8 @@ def call_get_data(name):
         data, labels, protected = get_and_preprocess_compas_data()
     elif name == "cc":
         data, labels, protected, cats = get_and_preprocess_cc()
+    elif name == "dc3":
+        data, labels, protected, cats = get_and_preprocess_dc3()
     elif name == "german":
         data, labels, protected, cats = get_and_preprocess_german()
     elif name == "adult":

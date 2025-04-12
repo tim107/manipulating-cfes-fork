@@ -70,37 +70,20 @@ The current total validation loss: nan.
 The current total validation loss: nan.
 
 python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_wachter" --use_presplit --dataset "german" --cfname "wachter"
-Noise norm tensor(0.4021, device='cuda:0', grad_fn=<NormBackward1>)
-Delta flip success tensor(0.5000, device='cuda:0')
-Validation Accuracy tensor(0.6768, device='cuda:0')
-Test Acc tensor(0.6768, device='cuda:0')
-The current total validation loss: 4398321.5.
-The current total validation loss: 27122740.0.
-The current total validation loss: 626620.75.
-The current total validation loss: 69076.9375.
-The current total validation loss: 309398.875.
-The current total validation loss: 7564328.0.
+
 
 python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_wachter-sparse" --use_presplit --dataset "german" --cfname "wachter-sparse"
-Noise norm tensor(0.3105, device='cuda:0', grad_fn=<NormBackward1>)
-Delta flip success tensor(0.3333, device='cuda:0')
-Validation Accuracy tensor(0.6465, device='cuda:0')
-Test Acc tensor(0.6465, device='cuda:0')
-The current total validation loss: 130776440832.0.
-The current total validation loss: 28.93379020690918.
-The current total validation loss: 36129152.0.
-The current total validation loss: 21.36134147644043.
-The current total validation loss: 28.873655319213867.
-The current total validation loss: 141668.578125.
+
 
 python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_proto" --use_presplit --dataset "german" --cfname "proto"
-Noise norm tensor(0.3079, device='cuda:0', grad_fn=<NormBackward1>)
-Delta flip success tensor(0.3333, device='cuda:0')
-Validation Accuracy tensor(0.6465, device='cuda:0')
-Test Acc tensor(0.6465, device='cuda:0')
-The current total validation loss: -0.40980857610702515.
-The current total validation loss: -0.5968309044837952.
-The current total validation loss: -0.5302058458328247.
-The current total validation loss: -0.5190186500549316.
+
 
 python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/german_revise" --use_presplit --dataset "german" --cfname "revise"
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_wachter" --use_presplit --dataset "dc3" --cfname "wachter"
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_wachter" --use_presplit --dataset "dc3" --cfname "wachter-sparse"
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_proto" --use_presplit --dataset "dc3" --cfname "proto"
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_revise" --use_presplit --dataset "dc3" --cfname "revise"

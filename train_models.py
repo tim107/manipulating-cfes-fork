@@ -274,6 +274,9 @@ if CFNAME == "revise":
         current_val_loss = 0
         for j, data_batch in enumerate(data_loader):
             inputs_batch, labels_batch = data_batch
+            if len(inputs_batch) == 1:
+                inputs_batch = torch.cat((inputs_batch, inputs_batch), dim=0)
+                labels_batch = torch.cat((labels_batch, labels_batch), dim=0)
             inputs_batch.to(device), labels_batch.to(device)
             vae_opt.zero_grad()
             outputs, _, mu, log_var = vae(inputs_batch)
@@ -286,6 +289,9 @@ if CFNAME == "revise":
         vae.eval()
         for j, data_batch in enumerate(val_data_loader):
             inputs_batch, labels_batch = data_batch
+            if len(inputs_batch) == 1:
+                inputs_batch = torch.stack((inputs_batch, inputs_batch), dim=0)
+                labels_batch = torch.stack((labels_batch, labels_batch), dim=0)
             inputs_batch.to(device), labels_batch.to(device)
             vae_opt.zero_grad()
             outputs, _, mu, log_var = vae(inputs_batch)
