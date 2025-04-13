@@ -141,7 +141,7 @@ model.eval()
 if CFNAME == "revise":
     data_interface = ReviseData(data, None, torch.empty(0))
     vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
-    vae.load_state_dict(torch.load('models/cc_revise_vae.pth'))
+    vae.load_state_dict(torch.load(f'models/{dataset}_revise_vae.pth'))
     vae.eval()
     vae.to(device)
     revise_instance = REVISE(data_interface, ReviseModel(model), vae)

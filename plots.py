@@ -24,30 +24,55 @@ def insert_result(model_name, eval_name, disparity, cost_ratio):
     cost_matrix[i, j] = cost_ratio
 
 # Insert parsed results
+## Communities and Crime
 # Model: Wachter
-insert_result('wachter', 'wachter', 0.4592, 2.8553)
-insert_result('wachter', 'wachter-sparse', 565567.3750, 174.6375)
-insert_result('wachter', 'proto', 1.6930, 0.3127)
-insert_result('wachter', 'revise', np.nan, np.nan)
+# insert_result('wachter', 'wachter', 0.4592, 2.8553)
+# insert_result('wachter', 'wachter-sparse', 565567.3750, 174.6375)
+# insert_result('wachter', 'proto', 1.6930, 0.3127)
+# insert_result('wachter', 'revise', np.nan, np.nan)
+
+# # Model: S-Wachter
+# insert_result('wachter-sparse', 'wachter', 106.7232, 50.7442)
+# insert_result('wachter-sparse', 'wachter-sparse', 1.4645e+13, 4.3163e+12)
+# insert_result('wachter-sparse', 'proto', 3.8267, 1.3335)
+# insert_result('wachter-sparse', 'revise', 5.0698, 1.3492)
+
+# # Model: Proto
+# insert_result('proto', 'wachter', 3055.4807, 1837.1626)
+# insert_result('proto', 'wachter-sparse', 1224792.5, 3055387.0)
+# insert_result('proto', 'proto', 0.3557, 1.0766)
+# insert_result('proto', 'revise', 5.6005, 0.6371)
+
+# # Model: REVISE
+# insert_result('revise', 'wachter', 2.3265, 0.3976)
+# insert_result('revise', 'wachter-sparse', 6.2382, 0.2983)
+# insert_result('revise', 'proto', 5.2260, 0.2129)
+# insert_result('revise', 'revise', 5.5121, 1.0061)
+
+
+## German:
+insert_result('wachter', 'wachter', 59553.2656, 31334.8066)
+insert_result('wachter', 'wachter-sparse', 5.7026, 2.8877)
+insert_result('wachter', 'proto', 0.0386, 0.1077)
+insert_result('wachter', 'revise', 0.9327, 0.8685)
 
 # Model: S-Wachter
-insert_result('wachter-sparse', 'wachter', 106.7232, 50.7442)
-insert_result('wachter-sparse', 'wachter-sparse', 1.4645e+13, 4.3163e+12)
-insert_result('wachter-sparse', 'proto', 3.8267, 1.3335)
-insert_result('wachter-sparse', 'revise', 5.0698, 1.3492)
+insert_result('wachter-sparse', 'wachter', 4371.3872, 125.3142)
+insert_result('wachter-sparse', 'wachter-sparse', 27.5320, 2.1952)
+insert_result('wachter-sparse', 'proto', 0.6418, 1.2574)
+insert_result('wachter-sparse', 'revise', 0.0813, 1.0027)
 
 # Model: Proto
-insert_result('proto', 'wachter', 3055.4807, 1837.1626)
-insert_result('proto', 'wachter-sparse', 1224792.5, 3055387.0)
-insert_result('proto', 'proto', 0.3557, 1.0766)
-insert_result('proto', 'revise', 5.6005, 0.6371)
+insert_result('proto', 'wachter', 8251.0195, 2928.8931)
+insert_result('proto', 'wachter-sparse', 4892610., 0.0044)
+insert_result('proto', 'proto', 0.0780, 0.6180)
+insert_result('proto', 'revise', 1.0397, 0.9161)
 
 # Model: REVISE
-insert_result('revise', 'wachter', 2.3265, 0.3976)
-insert_result('revise', 'wachter-sparse', 6.2382, 0.2983)
-insert_result('revise', 'proto', 5.2260, 0.2129)
-insert_result('revise', 'revise', 5.5121, 1.0061)
-
+insert_result('revise', 'wachter', 55900416., 7025767.)
+insert_result('revise', 'wachter-sparse', 137562.5156, 21627.4355)
+insert_result('revise', 'proto', 1.5146, 0.2998)
+insert_result('revise', 'revise', 0.0353, 0.9417)
 # Assume all DiCE values are missing
 # disparity_matrix[:, 3] = np.nan
 # cost_matrix[:, 3] = np.nan
@@ -77,10 +102,10 @@ def plot_matrix(data, title, cmap='Blues', value_fmt='{:.2f}'):
     plt.title(title, pad=20)
     fig.colorbar(cax, ax=ax, fraction=0.046, pad=0.04)
     plt.tight_layout()
-    plt.savefig(f"{title}.png", bbox_inches='tight')
+    plt.savefig(f"plots/{title}.png", bbox_inches='tight')
 
 
 
 # Plot updated matrices
 plot_matrix(disparity_matrix, title="Disparity Matrix (lower is better)")
-plot_matrix(cost_matrix, title="Cost Ratio Matrix (higher is better)")
+plot_matrix(cost_matrix, title="Cost Reduction Matrix (higher is better)")

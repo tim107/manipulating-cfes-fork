@@ -113,21 +113,101 @@ Cost Ratio tensor(1.0061)
 ##########################################################
 ##########################################################
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter" --cf_algo "wachter"
+Protected tensor(1026.2792) tensor(3075242.2500)
+Not-Protected: tensor(60579.5430) Var: tensor(3.6414e+10)
+Not-Protected + Delta: tensor(1.9333) Var: tensor(0.0579)
+Delta tensor(59553.2656)
+Cost Ratio tensor(31334.8066)
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter" --cf_algo "wachter-sparse"
+Protected tensor(4.2289) tensor(121.2433)
+Not-Protected: tensor(9.9315) Var: tensor(398.4624)
+Not-Protected + Delta: tensor(3.4393) Var: tensor(0.0658)
+Delta tensor(5.7026)
+Cost Ratio tensor(2.8877)
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter" --cf_algo "proto"
+Protected tensor(0.4423) tensor(0.0883)
+Not-Protected: tensor(0.4037) Var: tensor(0.1055)
+Not-Protected + Delta: tensor(3.7482) Var: tensor(0.4429)
+Delta tensor(0.0386)
+Cost Ratio tensor(0.1077)
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter" --cf_algo "revise"
-
+Protected tensor(2.1573) tensor(nan)
+Not-Protected: tensor(1.2246) Var: tensor(nan)
+Not-Protected + Delta: tensor(1.4101) Var: tensor(nan)
+Delta tensor(0.9327)
+Cost Ratio tensor(0.8685)
+########################################################
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter-sparse" --cf_algo "wachter"
+Protected tensor(0.4668) tensor(0.0333)
+Not-Protected: tensor(4371.8540) Var: tensor(2.0717e+08)
+Not-Protected + Delta: tensor(34.8871) Var: tensor(17767.5371)
+Delta tensor(4371.3872)
+Cost Ratio tensor(125.3142)
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter-sparse" --cf_algo "wachter-sparse"
+Protected tensor(0.4046) tensor(0.0059)
+Not-Protected: tensor(27.9366) Var: tensor(8115.4521)
+Not-Protected + Delta: tensor(12.7259) Var: tensor(2754.3101)
+Delta tensor(27.5320)
+Cost Ratio tensor(2.1952)
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter-sparse" --cf_algo "proto"
+Protected tensor(0.2854) tensor(0.0365)
+Not-Protected: tensor(0.9272) Var: tensor(2.8627)
+Not-Protected + Delta: tensor(0.7374) Var: tensor(0.0102)
+Delta tensor(0.6418)
+Cost Ratio tensor(1.2574)
 python evaluate_models.py --dataset "german" --model_path "models/german_wachter-sparse" --cf_algo "revise"
-
+Protected tensor(1.1098) tensor(nan)
+Not-Protected: tensor(1.0284) Var: tensor(nan)
+Not-Protected + Delta: tensor(1.0257) Var: tensor(nan)
+Delta tensor(0.0813)
+Cost Ratio tensor(1.0027)
+#############################################################
 python evaluate_models.py --dataset "german" --model_path "models/german_proto" --cf_algo "wachter"
+Protected tensor(25.1748) tensor(3054.8674)
+Not-Protected: tensor(8276.1943) Var: tensor(6.7093e+08)
+Not-Protected + Delta: tensor(2.8257) Var: tensor(57.3563)
+Delta tensor(8251.0195)
+Cost Ratio tensor(2928.8931)
 python evaluate_models.py --dataset "german" --model_path "models/german_proto" --cf_algo "wachter-sparse"
+Protected tensor(10.2493) tensor(595.9476)
+Not-Protected: tensor(4892620.) Var: tensor(2.3938e+14)
+Not-Protected + Delta: tensor(1.1151e+09) Var: tensor(6.9254e+18)
+Delta tensor(4892610.)
+Cost Ratio tensor(0.0044)
 python evaluate_models.py --dataset "german" --model_path "models/german_proto" --cf_algo "proto"
+Protected tensor(0.5416) tensor(0.1036)
+Not-Protected: tensor(0.4636) Var: tensor(0.0736)
+Not-Protected + Delta: tensor(0.7502) Var: tensor(0.0169)
+Delta tensor(0.0780)
+Cost Ratio tensor(0.6180)
 python evaluate_models.py --dataset "german" --model_path "models/german_proto" --cf_algo "revise"
-
+Protected tensor(2.0871) tensor(nan)
+Not-Protected: tensor(1.0474) Var: tensor(nan)
+Not-Protected + Delta: tensor(1.1432) Var: tensor(nan)
+Delta tensor(1.0397)
+Cost Ratio tensor(0.9161)
+#########################################################
 python evaluate_models.py --dataset "german" --model_path "models/german_revise" --cf_algo "wachter"
+Protected tensor(82914664.) tensor(4.0235e+16)
+Not-Protected: tensor(27014246.) Var: tensor(1.8243e+16)
+Not-Protected + Delta: tensor(3.8450) Var: tensor(0.0124)
+Delta tensor(55900416.)
+Cost Ratio tensor(7025767.)
 python evaluate_models.py --dataset "german" --model_path "models/german_revise" --cf_algo "wachter-sparse"
+Protected tensor(6.7860) tensor(140.2329)
+Not-Protected: tensor(137569.2969) Var: tensor(3.5797e+11)
+Not-Protected + Delta: tensor(6.3609) Var: tensor(0.0013)
+Delta tensor(137562.5156)
+Cost Ratio tensor(21627.4355)
 python evaluate_models.py --dataset "german" --model_path "models/german_revise" --cf_algo "proto"
+Protected tensor(0.4454) tensor(0.1725)
+Not-Protected: tensor(1.9600) Var: tensor(21.6500)
+Not-Protected + Delta: tensor(6.5371) Var: tensor(0.0256)
+Delta tensor(1.5146)
+Cost Ratio tensor(0.2998)
 python evaluate_models.py --dataset "german" --model_path "models/german_revise" --cf_algo "revise"
+Protected tensor(0.9868) tensor(nan)
+Not-Protected: tensor(1.0221) Var: tensor(nan)
+Not-Protected + Delta: tensor(1.0853) Var: tensor(nan)
+Delta tensor(0.0353)
+Cost Ratio tensor(0.9417)
