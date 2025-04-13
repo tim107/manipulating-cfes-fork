@@ -1,3 +1,15 @@
+wachters - cc
+Testing Accuracy tensor(0.7850, device='cuda:0')
+
+wachter sparse - cc
+Testing Accuracy tensor(0.7250, device='cuda:0')
+
+proto - cc
+Testing Accuracy tensor(0.8050, device='cuda:0')
+
+revise - cc
+Testing Accuracy tensor(0.8350, device='cuda:0')
+########################################################
 python evaluate_models.py --dataset "cc" --model_path "models/cc_wachter" --cf_algo "wachter" 
 Protected tensor(21.4765) tensor(785.9680)
 Not-Protected: tensor(21.9357) Var: tensor(388.4911)

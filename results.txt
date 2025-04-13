@@ -82,7 +82,7 @@ python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "mode
 
 python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_wachter" --use_presplit --dataset "dc3" --cfname "wachter"
 
-python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_wachter" --use_presplit --dataset "dc3" --cfname "wachter-sparse"
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_wachter-sparse" --use_presplit --dataset "dc3" --cfname "wachter-sparse"
 
 python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/dc3_proto" --use_presplit --dataset "dc3" --cfname "proto"
 
