@@ -1,0 +1,10 @@
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_wachter" --use_presplit --dataset "cc" --cfname "wachter"
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_wachter-sparse" --use_presplit --dataset "cc" --cfname "wachter-sparse"
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_proto" --use_presplit --dataset "cc" --cfname "proto"
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_revise" --use_presplit --dataset "cc" --cfname "revise"
+
+
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_wachter" --use_presplit --dataset "german" --cfname "wachter"
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_wachter-sparse" --use_presplit --dataset "german" --cfname "wachter-sparse"
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_proto" --use_presplit --dataset "german" --cfname "proto"
+python train_models.py --iters1 10000 --iters2 30 --save_model --save_path "models/cc_revise" --use_presplit --dataset "german" --cfname "revise"
