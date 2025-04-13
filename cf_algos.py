@@ -499,6 +499,7 @@ class proto:
             if self.kd_tree is not None and proto:
                 closest_index = self.kd_tree.query(x.unsqueeze(0).detach().cpu().numpy(), k=1, p=1)[1][0]
                 x_p = self.positive_data[closest_index].detach().clone()
+                # This is a fix by the original authors, if everything runs on CPU, this code should still work.
                 if x_cf.is_cuda != x_p.is_cuda:
                     if x_cf.is_cuda:
                         x_p = x_p.cuda()
