@@ -28,7 +28,7 @@ scipy==1.15.2
 six==1.17.0
 tensorboardX==2.6.2.2
 threadpoolctl==3.6.0
-torch==1.13.1+cu117
+#torch==1.13.1+cu117
 tqdm==4.67.1
 typing_extensions==4.13.1
 urllib3==2.3.0

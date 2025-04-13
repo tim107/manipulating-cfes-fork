@@ -1,4 +1,7 @@
-
+Here you can find all commands used to train and evaluate the models. Install requirements.txt using "pip install -r "requirements.txt"". 
+We used python version Python 3.11.11
+pytorch was installed separetely using the following command:
+pip install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
 
 
 #commands to train all models:
