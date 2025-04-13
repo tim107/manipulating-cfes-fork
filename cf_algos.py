@@ -261,7 +261,6 @@ def assess(e, model, data, protected, labels, data_t, protected_t, labels_t, cf_
                 'Perturbed_Burden_Protected': perturbed_burden_protected,
                 'Training_Delta': training_diff}
 
-# TODO: add revise
 def get_counterfactuals_from_alg(data, model, protected, cf_name, cf_args, all_data=None, key=None, sample=False,
                                  use_tqdm=False, perturb=False):
     """
@@ -324,7 +323,7 @@ def get_counterfactuals_from_alg(data, model, protected, cf_name, cf_args, all_d
     else:
         return {'cfs': cfs}
 
-# TODO: add revise
+
 def call_cf_alg(model, data, cf_name, cf_args, use_tqdm):
     if cf_name == "wachter":
         cfs = wachter(model,
@@ -673,7 +672,6 @@ def revise_func(model, cf_instance, data, target, features_to_vary, lmbda, alglr
     # else:
     # 	counterfactual_objective = sparse_wachter_objective
 
-    # TODO: do we do normalisation here?
     maxes, mins = torch.max(data, dim=0)[0], torch.min(data, dim=0)[0].detach().clone().numpy()
 
     def get_cf(x, features_to_vary, target=0.7):
@@ -688,7 +686,7 @@ def revise_func(model, cf_instance, data, target, features_to_vary, lmbda, alglr
         for datapoint in data:
             cfs.append(get_cf(datapoint, features_to_vary, target))
 
-    # Run cf search in parallel, TODO: disable parallel search for now
+    # Run cf search in parallel,
     # if use_tqdm:
     #     cfs = Parallel(n_jobs=num_cores)(
     #         delayed(get_cf)(data[i].detach().clone(), model, target, mad) for i in tqdm(range(data.shape[0])))

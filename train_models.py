@@ -252,11 +252,8 @@ print ('#######')
 
 # Train the VAE for REVISE
 
-# Todo: When do we scale the data?
-# Todo: figure out data, val split and how to obtain categorical indices
 if CFNAME == "revise":
     categorical_indices = torch.from_numpy(cat_features)
-    # TODO: val data in val data loader
     data_interface = ReviseData(data, None, categorical_indices)
     vae = VAE(data.shape[1], int(data.shape[1]/2), data_interface)
     vae_opt = torch.optim.Adam(vae.parameters(), lr=0.001)
@@ -307,7 +304,7 @@ if CFNAME == "revise":
         if val_patience == 0:
             print(f"Training aborted after no validation improvement")
             break
-    # TODO: Add saving code for the VAE parameters.
+
     # Create REVISE instance
     revise_instance = REVISE(data_interface, ReviseModel(model), vae)
     config.update({'cf_instance': revise_instance})
